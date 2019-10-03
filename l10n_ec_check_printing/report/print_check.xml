@@ -7,7 +7,7 @@
         <link rel="stylesheet" type="text/scss" href="/l10n_ec_check_printing/static/src/scss/report_check_commons.scss"/>
         <link rel="stylesheet" type="text/scss" href="/l10n_ec_check_printing/static/src/scss/report_check_bottom.scss"/>
         <link rel="stylesheet" type="text/scss" href="/l10n_ec_check_printing/static/src/scss/report_check_middle.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/l10n_ec_check_printing/static/src/scss/report_check_top.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/l10n_ec_check_printing/static/src/scss/report_check_top1.scss"/>
     </xpath>
 </template>
 
@@ -17,20 +17,26 @@
             <div class="o-watermark">ANULADO</div>
         </t>
         <div class="sequence_number" t-if="page['sequence_number']" t-esc="page['sequence_number']" />
-        <div class="ckus_date" t-esc="page['payment_date']"/>
-        <div class="ckus_payee_name" t-esc="page['partner_name']"/>
-        <div class="ckus_amount">
+        <!-- div class="ckus_date" t-esc="page['payment_date']"/ -->
+        <!-- div class="ckus_payee_name" t-esc="page['partner_name']"/ -->
+        <div style="top:1.19in;left:0.956in" t-esc="page['partner_name']"/>
+        <div style="top:1.19in;left:5.328in">
             <t t-esc="page['amount'].replace(o.currency_id.symbol, '')"/>
         </div>
-        <div class="ckus_amount_in_word" t-esc="page['amount_in_word']"/>
-        <div class="ckus_payee_addr" t-esc="page['partner_id']" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-        <div class="ckus_memo" t-esc="page['memo']"/>
+        <!-- div style="top:1.65in;left:0.956in" t-esc="page['amount_in_word']"/ -->
+        <div style="top:1.42in;left:0.956in" t-esc="o.check_amount_in_words"/>
+        <!-- div class="ckus_payee_addr" t-esc="page['partner_id']" t-options='{"widget": "contact", "fields": ["city"], "no_marker": True}'/ -->
+        <!--div class="ckus_payee_addr" t-esc="page['partner_id']" t-options='{"widget": "contact", "fields": ["city"], "no_marker": True}'/ -->
+        <t t-set="lugar" t-value="o.partner_id.city + ', ' + o.payment_date.strftime('%Y-%m-%d')"/>
+        <div style="top:1.89in;left:0.956in" t-esc="lugar"/>
+        <!-- div class="ckus_memo" t-esc="page['memo']"/ -->
     </div>
 </template>
 
 <template id="ckus_stub">
-    <div t-attf-class="ckus_stub ckus_stub_{{ stub_num }}">
-        <div class="sequence_number" t-if="page['sequence_number']" t-esc="page['sequence_number']" />
+    <div class="ckus_check">
+    <!-- div t-attf-class="ckus_stub ckus_stub_{{ stub_num }}" -->
+        <!-- div class="sequence_number" t-if="page['sequence_number']" t-esc="page['sequence_number']" />
         <div class="row summary_line">
             <div class="col-6 text-left">
                 <span t-esc="page['partner_name']"/>
@@ -38,9 +44,63 @@
             <div class="col-6 text-right">
                 <span t-esc="page['payment_date']"/>
             </div>
+        </div -->
+        <div style="top:3.5in;left:0.956in"><b>COMPROBANTE DE EGRESO</b></div>
+        <div style="top:3.5in;left:5in"><b>No. <t t-esc="o.name"/></b></div>
+
+        <div style="top:3.9in;left:0.956in">
+            <t t-set="total_debe" t-value="0"/>
+            <t t-set="total_pago" t-value="0"/>
+
+
+            <table style="width:90%" cellpadding="10">
+                <t t-foreach="o.reconciled_invoice_ids" t-as="inv_rec">
+                    <t t-foreach="inv_rec.invoice_line_ids" t-as="invoice_line">
+                        <tr>
+                        <td style="width:35%"><t t-esc="invoice_line.name"/></td>
+                        <td style="width:35%"></td>
+                        <td style="width:15%" align="right"><span t-esc="invoice_line.price_subtotal" t-options='{"widget": "float", "precision": 2}'/></td>
+                        <td style="width:15%"></td>
+                        </tr>
+                        <t t-set="total_debe" t-value="total_debe + invoice_line.price_subtotal"/>
+                    </t>
+                    <t t-foreach="inv_rec.tax_line_ids" t-as="tax_line">
+                        <tr>
+                        <td style="width:35%"><t t-esc="tax_line.tax_id.description"/></td>
+                        <td style="width:35%"></td>
+                        <td style="width:15%" align="right"><span t-esc="tax_line.amount" t-options='{"widget": "float", "precision": 2}'/></td>
+                        <td style="padding-left: 30px;width:width:15%"></td>
+                        </tr>
+                        <t t-set="total_debe" t-value="total_debe + tax_line.amount"/>
+                    </t>
+                </t>
+                <tr><td colspan="4"><br/><br/></td></tr>
+                <t t-foreach="o.move_line_rel_ids" t-as="move_line">
+                    <tr>
+                    <td style="width:35%"></td>
+                    <td style="width:35%"><t t-esc="move_line.account_id.name"/></td>
+                    <td style="width:15%"></td>
+                    <td style="padding-left: 30px;width:width:15%" align="right"><span t-esc="move_line.credit" t-options='{"widget": "float", "precision": 2}'/></td>
+                    </tr>
+                    <t t-set="total_pago" t-value="total_pago + move_line.credit"/>
+                </t>
+               <tr>
+                <td style="width:35%"></td>
+                <td style="width:35%"></td>
+                <td style="width:15%" align="right"><br/><br/><b><span t-esc="total_debe" t-options='{"widget": "float", "precision": 2}'/></b></td>
+                <td style="padding-left: 30px;width:width:15%" align="right"><br/><br/><b><span t-esc="total_pago" t-options='{"widget": "float", "precision": 2}'/></b></td>
+
+                </tr>
+
+
+            </table>
+            <p>
+               <br/><br/><t t-esc="o.communication"/>
+
+            </p>
         </div>
 
-        <table class="table table-bordered table-sm stub_lines" t-if="page['stub_lines']">
+        <!-- table class="table table-bordered table-sm stub_lines" t-if="page['stub_lines']">
             <thead><tr>
                 <th class="text-left">Due Date</th>
                 <th class="text-left">Description</th>
@@ -68,7 +128,32 @@
         </table>
         <div class="stub_total_amount">Valor del cheque:
             <t t-esc="page['amount']"/>
+        </div -->
+    </div>
+
+</template>
+
+    <template id="ckus_singatures">
+    <div class="ckus_check">
+
+        <div style="top:8.19in;left:0.956in">
+          <table cellpadding="10" style="width:100%">
+              <tr>
+                  <td style="padding-left: 20px;width:33%">_____________________</td>
+                  <td style="padding-left: 20px;width:33%">_____________________</td>
+                  <td style="padding-left: 20px;width:33%">_____________________</td>
+              </tr>
+              <tr>
+                  <td style="padding-left: 20px;width:33%">Elaborado por</td>
+                  <td style="padding-left: 20px;width:33%">Revisado por</td>
+                  <td style="padding-left: 20px;width:33%">Recibí conforme<br/>Nombre<br/>C.I.</td>
+              </tr>
+          </table>
+
+
+
         </div>
+
     </div>
 </template>
 

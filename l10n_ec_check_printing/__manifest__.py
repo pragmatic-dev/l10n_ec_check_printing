@@ -26,7 +26,7 @@ You can choose between:
     'data': [
         'data/us_check_printing.xml',
         'report/print_check.xml',
-        'report/print_check_top.xml',
+        'report/print_check_top1.xml',
         'report/print_check_middle.xml',
         'report/print_check_bottom.xml',
         'report/print_check_alone.xml',
