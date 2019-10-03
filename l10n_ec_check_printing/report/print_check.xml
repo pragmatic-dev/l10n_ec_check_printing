@@ -19,16 +19,16 @@
         <div class="sequence_number" t-if="page['sequence_number']" t-esc="page['sequence_number']" />
         <!-- div class="ckus_date" t-esc="page['payment_date']"/ -->
         <!-- div class="ckus_payee_name" t-esc="page['partner_name']"/ -->
-        <div style="top:1.19in;left:0.956in" t-esc="page['partner_name']"/>
-        <div style="top:1.19in;left:5.328in">
+        <div style="top:1.17in;left:0.956in" t-esc="page['partner_name']"/>
+        <div style="top:1.17in;left:4.935in">
             <t t-esc="page['amount'].replace(o.currency_id.symbol, '')"/>
         </div>
         <!-- div style="top:1.65in;left:0.956in" t-esc="page['amount_in_word']"/ -->
-        <div style="top:1.42in;left:0.956in" t-esc="o.check_amount_in_words"/>
+        <div style="top:1.40in;left:0.956in" t-esc="o.check_amount_in_words"/>
         <!-- div class="ckus_payee_addr" t-esc="page['partner_id']" t-options='{"widget": "contact", "fields": ["city"], "no_marker": True}'/ -->
         <!--div class="ckus_payee_addr" t-esc="page['partner_id']" t-options='{"widget": "contact", "fields": ["city"], "no_marker": True}'/ -->
         <t t-set="lugar" t-value="o.partner_id.city + ', ' + o.payment_date.strftime('%Y-%m-%d')"/>
-        <div style="top:1.89in;left:0.956in" t-esc="lugar"/>
+        <div style="top:1.90in;left:0.956in" t-esc="lugar"/>
         <!-- div class="ckus_memo" t-esc="page['memo']"/ -->
     </div>
 </template>
