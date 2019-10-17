@@ -5,6 +5,15 @@ from odoo import models, fields, api, _
 class account_payment(models.Model):
     _inherit = "account.payment"
 
+    check_amount_in_words_ec = fields.Char(string='Importe en letras', compute='_compute_importe_letras')
+
+
+    @api.one
+    @api.depends('check_amount_in_words')
+    def _compute_importe_letras(self):
+        text = self.check_amount_in_words.split(' and ')[0]
+        self.check_amount_in_words_ec = text + ' con ' + str(int((self.amount-int(self.amount))*100)) + '/100'
+
     @api.multi
     def do_print_checks(self):
         if self:

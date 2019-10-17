@@ -24,7 +24,7 @@
             <t t-esc="page['amount'].replace(o.currency_id.symbol, '')"/>
         </div>
         <!-- div style="top:1.65in;left:0.956in" t-esc="page['amount_in_word']"/ -->
-        <div style="top:1.40in;left:0.956in" t-esc="o.check_amount_in_words"/>
+        <div style="top:1.40in;left:0.956in" t-esc="o.check_amount_in_words_ec"/>
         <!-- div class="ckus_payee_addr" t-esc="page['partner_id']" t-options='{"widget": "contact", "fields": ["city"], "no_marker": True}'/ -->
         <!--div class="ckus_payee_addr" t-esc="page['partner_id']" t-options='{"widget": "contact", "fields": ["city"], "no_marker": True}'/ -->
         <t t-set="lugar" t-value="o.partner_id.city + ', ' + o.payment_date.strftime('%Y-%m-%d')"/>
@@ -144,7 +144,7 @@
                   <td style="padding-left: 20px;width:33%">_____________________</td>
               </tr>
               <tr>
-                  <td style="padding-left: 20px;width:33%">Elaborado por</td>
+                  <td style="padding-left: 20px;width:33%">Elaborado por<br/><t t-esc="user.name"/></td>
                   <td style="padding-left: 20px;width:33%">Revisado por</td>
                   <td style="padding-left: 20px;width:33%">Recibí conforme<br/>Nombre<br/>C.I.</td>
               </tr>
